@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="1000" height="1000"><g clip-path="url(#SvgjsClipPath1080)"><rect width="1000" height="1000" fill="#ffffff"></rect><g transform="matrix(1.6666666666666667,0,0,1.6666666666666667,0,0)"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="600" height="600"><svg width="600" height="600" viewBox="0 0 600 600" fill="none" stroke="none" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="path_1" d="M185 0C287.187 0 370 82.8134 370 185L370 185C370 287.187 287.187 370 185 370L185 370C82.8134 370 0 287.187 0 185L0 185C0 82.8134 82.8134 0 185 0Z"></path>
+    <clipPath id="clip_path_2">
+      <use xlink:href="#path_1"></use>
+    </clipPath>
+  <clipPath id="SvgjsClipPath1080"><rect width="1000" height="1000" x="0" y="0" rx="500" ry="500"></rect></clipPath></defs>
+  <g id="Group">
+    <rect id="Rectangle" width="600" height="600" style="fill:#474747;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+    <g id="Group" transform="translate(115 115)">
+      <path id="Rectangle" d="M185 0C287.187 0 370 82.8134 370 185L370 185C370 287.187 287.187 370 185 370L185 370C82.8134 370 0 287.187 0 185L0 185C0 82.8134 82.8134 0 185 0Z" style="mix-blend-mode:normal;"></path>
+      <g clip-path="url(#clip_path_2)">
+        <g id="Group" transform="translate(0 -0)">
+          <g id="Group" transform="translate(131.04 131.023)">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+          <g id="Group" transform="translate(131.04 0)">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+          <g id="Group" transform="translate(262.08 131.023)">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+          <g id="Group" transform="translate(0 131.023)">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+          <g id="Group">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+          <g id="Group" transform="translate(262.08 262.046)">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+          <g id="Group" transform="translate(131.04 262.046)">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+          <g id="Group" transform="translate(0 262.046)">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+          <g id="Group" transform="translate(262.08 0)">
+            <g id="Group">
+              <rect id="Rectangle" width="107.891" height="107.952" style="fill:#FFFFFF;fill-rule:evenodd;mix-blend-mode:normal;"></rect>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg></svg></g></g></svg>

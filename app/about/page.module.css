@@ -1,0 +1,10 @@
+.container {
+    max-width: 600px;
+    margin: 60px auto 40px auto;
+}
+.container p {
+    margin-top: 20px;
+}
+.container p:first-of-type {
+    margin-top: 0;
+}

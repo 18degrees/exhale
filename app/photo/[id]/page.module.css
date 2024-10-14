@@ -1,0 +1,41 @@
+.container {
+    margin: auto;
+    background-color: #ffffff;
+    padding: 40px 0;
+    width: 100%
+}
+.image-wrapper {
+    text-align: center;
+}
+.metadata {
+    margin: 20px auto 0 30px;
+    color: #292929;
+}
+.metadata h1 {
+    margin-bottom: 10px;
+}
+.metadata p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+.metadata a {
+    text-decoration: underline;
+}
+.tags {
+    margin: 15px 0 30px 0 !important;
+}
+.tags span {
+    display: inline-block;
+    margin-right: 10px;
+    background-color: #f2f2f2;
+    padding: 8px 10px;
+    border-radius: 5px;
+}
+.camera {
+    margin-top: 20px
+}
+@media screen and (max-width: 1000px) {
+    .container {
+        width: 100%;
+    }
+}
