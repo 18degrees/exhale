@@ -9,13 +9,13 @@ export default function Header() {
             <div>
                 <div className={style['logo-container']}>
                     <Image
-                        src='/web-app-manifest-192x192.png'
+                        src='/favicon-rounded-45x45.png'
                         alt='logo'
                         width={45}
                         height={45}
                         priority
                     />
-                    <span className={barlow.className}>EXHALE</span>
+                    <span className={barlow.className}>exhale</span>
                 </div>
                 <nav>
                     <Link href='/'>gallery</Link>
