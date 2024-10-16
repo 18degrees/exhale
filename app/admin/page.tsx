@@ -42,21 +42,19 @@ export default function AdminPage() {
         }
     }
     function onChangeIncludedValue(value: 'createDate' | 'coordinates' | 'camera') {
-        switch (value) {
-            case 'camera':
-                setIncludedValues((prev) => {
+        setIncludedValues((prev) => {
+            switch (value) {
+                case 'camera':
                     return {...prev, camera: !prev.camera}
-                })
-                break
-            case 'coordinates':
-                setIncludedValues((prev) => {
+
+                case 'coordinates':
                     return {...prev, coordinates: !prev.coordinates}
-                })
-            case 'createDate':
-                setIncludedValues((prev) => {
+
+                case 'createDate':     
                     return {...prev, createDate: !prev.createDate}
-                })
-        }
+            }
+
+        })
     }
     return (
         <form className={style.form} onSubmit={submit}>
@@ -94,9 +92,9 @@ export default function AdminPage() {
                 />
             </label>
             <div>
-                <label>Create date <input type='checkbox' checked={includedValues.createDate} onChange={() => onChangeIncludedValue('createDate')}/></label>
-                <label>Camera model <input type='checkbox' checked={includedValues.camera} onChange={() => onChangeIncludedValue('camera')}/></label>
-                <label>Coordinates <input type='checkbox' checked={includedValues.coordinates} onChange={() => onChangeIncludedValue('coordinates')}/></label>
+                <label>Create date <input type='checkbox' name='create-date' id='create-date' checked={includedValues.createDate} onChange={() => onChangeIncludedValue('createDate')}/></label>
+                <label>Camera model <input type='checkbox' name='camera' id='camera' checked={includedValues.camera} onChange={() => onChangeIncludedValue('camera')}/></label>
+                <label>Coordinates <input type='checkbox' name='coordinates' id='coordinates' checked={includedValues.coordinates} onChange={() => onChangeIncludedValue('coordinates')}/></label>
             </div>
             <input 
                 type='submit'
