@@ -29,9 +29,9 @@ export async function middleware(request: NextRequest) {
     const currentEnv = process.env.NODE_ENV as environment
 
     const isHttps = request.nextUrl.protocol === "https:"
-    const isLocalhost = request.nextUrl.origin.includes("localhost")
+    const isDomain = request.nextUrl.origin.includes("exhale")
 
-    if (currentEnv === 'production' && !isLocalhost && !isHttps) {
+    if (currentEnv === 'production' && isDomain && !isHttps) {
         const newUrl = new URL(request.nextUrl.href)
 
         newUrl.protocol = "https:"
