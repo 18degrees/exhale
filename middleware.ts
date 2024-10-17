@@ -1,41 +1,42 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
+// import { NextRequest, NextResponse } from 'next/server'
+// import { getToken } from 'next-auth/jwt'
 
 export {default} from 'next-auth/middleware'
 
 export const config = {
-    matcher: '/:path?'
+    // matcher: '/:path?'
+    matcher: '/admin'
 }
 
-const protectedPaths = ['/admin']
+// const protectedPaths = ['/admin']
 
-type environment = "production" | "development"
+// type environment = "production" | "development"
 
-export async function middleware(request: NextRequest) {
-    const path = request.nextUrl.pathname
+// export async function middleware(request: NextRequest) {
+//     const path = request.nextUrl.pathname
 
-    const isPathProtected = protectedPaths.includes(path)
+//     const isPathProtected = protectedPaths.includes(path)
 
-    if (isPathProtected) {
-        const session = await getToken({req: request, secret: process.env.NEXTAUTH_SECRET})
+//     if (isPathProtected) {
+//         const session = await getToken({req: request, secret: process.env.NEXTAUTH_SECRET})
     
-        if (!session) {
-            const origin = request.nextUrl.origin
+//         if (!session) {
+//             const origin = request.nextUrl.origin
 
-            return NextResponse.redirect(`${origin}/api/auth/signin?callbackUrl=${path}`, 308)
-        }
+//             return NextResponse.redirect(`${origin}/api/auth/signin?callbackUrl=${path}`, 308)
+//         }
 
-    }
-    const currentEnv = process.env.NODE_ENV as environment
+//     }
+//     const currentEnv = process.env.NODE_ENV as environment
 
-    const isHttps = request.nextUrl.protocol === "https:"
-    const isDomain = request.nextUrl.origin.includes("exhale")
+//     const isHttps = request.nextUrl.protocol === "https:"
+//     const isDomain = request.nextUrl.origin.includes("exhale")
 
-    if (currentEnv === 'production' && isDomain && !isHttps) {
-        const newUrl = new URL(request.nextUrl.href)
+//     if (currentEnv === 'production' && isDomain && !isHttps) {
+//         const newUrl = new URL(request.nextUrl.href)
 
-        newUrl.protocol = "https:"
+//         newUrl.protocol = "https:"
 
-        return NextResponse.redirect(newUrl.href, 301)
-    }
-}
+//         return NextResponse.redirect(newUrl.href, 301)
+//     }
+// }
