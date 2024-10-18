@@ -2,16 +2,20 @@
 
 import { useEffect, useRef, useState } from "react"
 import Photo from "./components/photo/Photo"
+import { Masonry } from "react-plock"
 import style from "./page.module.css"
 
+interface IMetadata {
+	id: string
+	title?: string
+
+}
 interface IResBody {
-	metadata: [{
-		id: string
-		title?: string
-	}]
+	metadata: IMetadata[]
 }
 export default function Home() {
-	const [photos, setPhotos] = useState<JSX.Element[]>([])
+	const [metadata, setMetadata] = useState<IMetadata[]>([])
+
 	const page = useRef(0)
 
 	useEffect(() => {
@@ -34,18 +38,13 @@ export default function Home() {
 	
 				const body = await res.json() as IResBody
 	
-				if (!ignore) setPhotos(prev => [...prev, ...body.metadata.map(({id, title}, index) => {
-					return (
-						<Photo 
-							id={id}
-							key={id}
-							width={400} 
-							quality={75}
-							title={title}
-							priority={index <= 2 ? true : false}
-						/>
-					)
-				})])
+				if (!ignore) {
+					body.metadata.map((meta, index) => {
+						setMetadata(prev => {
+							return [...prev, meta]
+						})
+					})
+				}
 			} catch (error) {
 				console.log(error)
 			}
@@ -57,7 +56,23 @@ export default function Home() {
 	}, [])
 	return (
 		<div className={style.container}>
-			{photos.map(photo => photo)}
+			<Masonry
+				items={metadata}
+				config={{
+					columns: [1, 2, 3],
+					gap: [48, 24, 12],
+					media: [640, 1024, 1024],
+				}}
+				render={({id, title}, index) => (
+					<Photo 
+						id={id}
+						key={id}
+						quality={75}
+						title={title}
+						priority={index <= 2 ? true : false}
+					/>
+				)}
+    />
 		</div>
 	)
 }

@@ -1,9 +1,7 @@
 .container {
-    max-width: 600px;
-    margin: 60px auto 40px auto;
-    text-align: center;
+    max-width: 1500px;
+    margin: auto;
 }
-.container a {
-    display: block;
-    margin-bottom: 40px
+.container > div > div {
+    justify-items: center;
 }

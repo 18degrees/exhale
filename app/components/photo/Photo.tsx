@@ -1,12 +1,11 @@
 'use client'
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
 
 interface PhotoParams {
     id: string
-    width: number
     quality: number
     title?: string
     priority: boolean
@@ -19,6 +18,7 @@ export default function Photo({id, quality, title, priority}: PhotoParams) {
             key={id}
             href={`/photo/${id}`}
             shallow
+            style={{textAlign: 'center', width: '95%'}}
             >
             <Image
                 src={`/source/${id}.jpeg`}
@@ -27,7 +27,7 @@ export default function Photo({id, quality, title, priority}: PhotoParams) {
                 title={title}
                 quality={quality}
                 style={{
-                    width: '95%',
+                    width: '100%',
                     height: 'auto',
                     display: hasErrorOccurred ? 'none' : 'inline'
                 }}
