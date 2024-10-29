@@ -1,13 +1,14 @@
 import { IPhoto } from "@/app/interfaces/photo.interface";
-import nano from "nano";
 import { NextRequest } from "next/server";
+import nano from "nano";
 
 interface IPhotoMetaSup {
     id: string
     title?: string
 }
 
-const PHOTOS_PER_LOAD = 12
+const PHOTO_COUNT_INDEX = 3
+const PHOTOS_PER_LOAD = 2 * 3 * PHOTO_COUNT_INDEX   //to align photo for 2 and 3 rows 
 
 const DB_URI = process.env.COUCHDB_URI!
 
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest) {
 function getCurrentPage(req: NextRequest): number {
     const headers = req.headers
 
-    const roughCurrentPage = headers.get('loaded')
+    const roughCurrentPage = headers.get('page')
 
     const setCurrentPage = !roughCurrentPage ? 0 : typeof +roughCurrentPage === 'number' ? +roughCurrentPage : 0
 
