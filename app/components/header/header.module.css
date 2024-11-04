@@ -2,32 +2,19 @@
     height: 60px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 90%;
     margin: auto;
 }
 .plug {
-    width: 174px;
+    width: 48px;
 }
-.logo-container {
-    font-size: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.logo-container img {
+.header img {
     font-size: 15px
-}
-.logo-container span {
-    display: block;
-    margin-left: 20px;
-    color: #616161;
 }
 .header nav {
     font-size: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #292929
+    color: #161616
 }
 .header nav a:first-of-type {
     margin-right: 80px;
@@ -35,11 +22,6 @@
 @media screen and (max-width: 1250px) {
     .plug {
         width: 0;
-    }
-}
-@media screen and (max-width: 1000px) {
-    .logo-container span {
-        display: none;
     }
 }
 @media screen and (max-width: 600px) {
