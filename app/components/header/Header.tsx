@@ -7,10 +7,10 @@ export default function Header() {
         <header className={style.header}>
             <div>
                 <Image
-                    src='/favicon-48x48.png'
+                    src='/favicon.svg'
                     alt='logo'
-                    width={48}
-                    height={48}
+                    width={40}
+                    height={40}
                     priority
                 />
                 <nav>
