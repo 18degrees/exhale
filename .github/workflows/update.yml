@@ -1,0 +1,33 @@
+# To make available recently saved (in directory 'public') photos for production mode, it is enough to restart the app
+
+name: Update gallery
+
+on:
+  schedule:
+    - cron: '0 0 13,28 * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js app
+        run: npm run build
+
+      - name: Restart app
+        # Use the 'appleboy/ssh-action' action for SSH deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/exhale
+            git pull
+            pm2 restart exhale
