@@ -24,7 +24,7 @@ export default function Modal({params}: {params: {id: string}}) {
 
         async function getMetadata() {
             try {
-                const res = await fetch('http://localhost:3000/api/photo', {
+                const res = await fetch('/api/photo', {
                     headers: {
                         id: params.id
                     }
