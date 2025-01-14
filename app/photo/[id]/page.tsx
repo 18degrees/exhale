@@ -2,6 +2,7 @@
 
 import { IPhoto } from "@/app/interfaces/photo.interface"
 import { useEffect, useState } from "react"
+import { useRouter } from 'next/navigation'
 import style from './page.module.css'
 import Image from "next/image"
 import Link from "next/link"
@@ -13,6 +14,7 @@ interface PhotoParams {
 }
 
 export default function Page({params}: PhotoParams) {
+    const router = useRouter()
     const [meta, setMeta] = useState<IPhoto>({})
     const [windowWidth, setWindowWidth] = useState<number | undefined>(undefined)
 
@@ -32,7 +34,7 @@ export default function Page({params}: PhotoParams) {
                     }
                 })
                 
-                if (!res.ok || res.status === 204) return
+                if (!res.ok || res.status === 204) return router.replace('/')
                 
                 const metadata: IPhoto = await res.json()
         
@@ -48,7 +50,7 @@ export default function Page({params}: PhotoParams) {
                 setWindowWidth(document.documentElement.clientWidth)
             })
         }
-    }, [params.id])
+    }, [params.id, router])
     return (
         <div className={style.container}>
             <div className={style.content}>
