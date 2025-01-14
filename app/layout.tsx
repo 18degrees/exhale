@@ -1,7 +1,6 @@
 import { Providers } from "./components/Providers"
 import Header from "./components/header/Header"
 import type { Metadata } from "next"
-import { lora } from './fonts'
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -31,7 +30,7 @@ export default function RootLayout({
 					<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 					<meta name="apple-mobile-web-app-title" content="exhale" />
 				</head>
-				<body className={lora.className}>
+				<body>
 					<Header/>
 					<main>
 						{modal}

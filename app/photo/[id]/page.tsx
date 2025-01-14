@@ -3,7 +3,6 @@
 import { IPhoto } from "@/app/interfaces/photo.interface"
 import { useEffect, useState } from "react"
 import style from './page.module.css'
-import { barlow } from "@/app/fonts"
 import Image from "next/image"
 import Link from "next/link"
 

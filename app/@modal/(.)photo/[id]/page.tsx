@@ -6,7 +6,6 @@ import { CloseBtn } from './components/Close'
 import { useRouter } from 'next/navigation'
 import { createPortal } from 'react-dom'
 import style from './page.module.css'
-import { barlow } from "@/app/fonts"
 import Image from "next/image"
 import Link from 'next/link'
 

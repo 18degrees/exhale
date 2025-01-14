@@ -1,6 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,300&display=swap');
+
 * {
     margin: 0;
     box-sizing: border-box;
+}
+body > main {
+    margin: 40px auto;
+}
+p, h1, a, form {
+    font-family: "Roboto", serif;
+    font-weight: 300;
 }
 a {
     text-decoration: none;
