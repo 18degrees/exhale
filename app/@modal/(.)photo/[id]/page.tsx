@@ -13,11 +13,13 @@ import Link from 'next/link'
 export default function Modal({params}: {params: {id: string}}) {
 	const [meta, setMeta] = useState<IPhoto>({})
 
-    const [windowWidth, setWindowWidth] = useState<number | undefined>(document.documentElement.clientWidth)
+    const [windowWidth, setWindowWidth] = useState<number | undefined>(undefined)
 
     const aspectRatio = meta.width && meta.height ? meta.width / meta.height : undefined
 
     useEffect(() => {
+        setWindowWidth(document.documentElement.clientWidth)
+
         getMetadata()
 
         setSizeEvent()
