@@ -59,7 +59,7 @@ export default function AdminPage() {
     return (
         <form className={style.form} onSubmit={submit}>
             <label>
-                Title
+                Название
                 <input
                     id="title"
                     name="title"
@@ -70,7 +70,7 @@ export default function AdminPage() {
                 />
             </label>
             <label>
-                Tags
+                Тэги
                 <input
                     id="tags"
                     name="tags"
@@ -81,24 +81,24 @@ export default function AdminPage() {
                 />
             </label>
             <label>
-                Photo
+                Фото
                 <input
                     id="photo"
                     name="photo"
                     type="file"
-                    accept="image/heic"
+                    accept="image/heic, image/jpeg"
                     required={true}
                     onChange={e => setFiles(e.currentTarget.files)}
                 />
             </label>
             <div>
-                <label>Create date <input type='checkbox' name='create-date' id='create-date' checked={includedValues.createDate} onChange={() => onChangeIncludedValue('createDate')}/></label>
-                <label>Camera model <input type='checkbox' name='camera' id='camera' checked={includedValues.camera} onChange={() => onChangeIncludedValue('camera')}/></label>
-                <label>Coordinates <input type='checkbox' name='coordinates' id='coordinates' checked={includedValues.coordinates} onChange={() => onChangeIncludedValue('coordinates')}/></label>
+                <label>Дата создания <input type='checkbox' name='create-date' id='create-date' checked={includedValues.createDate} onChange={() => onChangeIncludedValue('createDate')}/></label>
+                <label>Модель камеры <input type='checkbox' name='camera' id='camera' checked={includedValues.camera} onChange={() => onChangeIncludedValue('camera')}/></label>
+                <label>Координаты <input type='checkbox' name='coordinates' id='coordinates' checked={includedValues.coordinates} onChange={() => onChangeIncludedValue('coordinates')}/></label>
             </div>
             <input 
                 type='submit'
-                value='Save photo'
+                value='Сохранить фото'
             />
         </form>
     )

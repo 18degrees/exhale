@@ -5,7 +5,8 @@ import Image from 'next/image'
 export default function Header() {
     return (
         <header className={style.header}>
-            <div>
+            <nav>
+                <Link href='/'>галерея</Link>
                 <Image
                     src='/favicon.svg'
                     alt='logo'
@@ -13,12 +14,8 @@ export default function Header() {
                     height={40}
                     priority
                 />
-                <nav>
-                    <Link href='/'>gallery</Link>
-                    <Link href='/about'>about</Link>
-                </nav>
-                <div className={style.plug}></div>
-            </div>
+                <Link href='/about'>о сайте</Link>
+            </nav>
         </header>
     )
 }

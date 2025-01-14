@@ -69,19 +69,19 @@ export default function Page({params}: PhotoParams) {
                     />
                 </div>
                 <div className={style.metadata}>
-                    {meta.title ? <h1 className={barlow.className}>{meta.title}</h1> : null}
+                    {meta.title ? <h1>{meta.title}</h1> : null}
                     {meta.tags ? <p className={style.tags}>{meta.tags.map(tag => <span key={tag}>{tag}</span>)}</p> : null}     
-                    {meta.createDateMask ? <p>The photo was taken {meta.createDateMask}</p> : null}
-                    {meta.googleMapLink ? <p>See the location in <Link href={meta.googleMapLink}>Google maps</Link></p> : null}      
+                    {meta.createDateMask ? <p>Фото сделано {meta.createDateMask}</p> : null}
+                    {meta.googleMapLink ? <p>Смотреть локацию в <Link href={meta.googleMapLink} target="_blank">гугл картах</Link></p> : null}      
                     <p>
                         <Link 
                         href={`/source/${params.id}.jpeg`} 
                         download
                         target="_blank"
-                        >Download
-                        </Link> with original quality
+                        >Скачать
+                        </Link> в оригинальном качестве
                     </p>
-                    {/* {meta.camera ? <p className={style.camera}>{meta.camera} camera was used</p> : null} */}
+                    {/* {meta.camera ? <p className={style.camera}>Камера {meta.camera}</p> : null} */}
                 </div>
             </div>
         </div>

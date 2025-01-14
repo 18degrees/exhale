@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 		template: '%s | Exhale',
 		default: 'Exhale',
 	},
-	description: "The gallery of photo mostly taken in Saint Petersburg by Mikhail Izotov",
+	description: "Галерея фотографий сделанных в Санкт-Петербурге перспективным начинающим фотографом Михаилом Изотовым",
 }
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
 	
 }>) {
 	return (
-		<html lang="en">
+		<html lang="ru">
 			<Providers>
 				<head>
 					<link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
