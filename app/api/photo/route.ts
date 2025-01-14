@@ -57,23 +57,23 @@ function getLocalTime(initialDateStr: string, offset: string) {
 function getDateString(date: string) {
     const [day, m, year] = date.split('.')
 
-    const monthStage = +day <= 10 ? 'early' : +day <= 20 ? 'mid' : 'late'
+    const monthStage = +day <= 10 ? 'начале' : +day <= 20 ? 'середине' : 'конце'
 
     const month = (
-        m === '01' ? 'January' :
-        m === '02' ? 'February' :
-        m === '03' ? 'March' :
-        m === '04' ? 'April' :
-        m === '05' ? 'May' :
-        m === '06' ? 'June' :
-        m === '07' ? 'July' :
-        m === '08' ? 'August' :
-        m === '09' ? 'September' :
-        m === '10' ? 'October' :
-        m === '11' ? 'November' : 'December'
+        m === '01' ? 'января' :
+        m === '02' ? 'февраля' :
+        m === '03' ? 'марта' :
+        m === '04' ? 'апреля' :
+        m === '05' ? 'мая' :
+        m === '06' ? 'июня' :
+        m === '07' ? 'июля' :
+        m === '08' ? 'августа' :
+        m === '09' ? 'сентября' :
+        m === '10' ? 'октября' :
+        m === '11' ? 'ноября' : 'декабря'
     )
 
-    return `in ${monthStage} ${month} ${year}`
+    return `в ${monthStage} ${month} ${year}`
 }
 
 interface IPOSTBody {
@@ -102,18 +102,24 @@ export async function POST(req: NextRequest) {
         if (!base64URL) return Response.json({ message: 'The photo is missing' }, {status: 401})
 
         const additionTimestamp = Date.now().toString()
+
+        const isHeic = base64URL.includes('application/octet-stream')
         
-        const base64 = base64URL.replace("data:application/octet-stream;base64,", '')
+        const base64 = base64URL.split('base64,')[1]
 
-        const heicBuffer = Buffer.from(base64, 'base64')
+        const buffer = Buffer.from(base64, 'base64')
 
-        const heicMetadata = await getHeicMetadata(heicBuffer, initialMetadata.include)
+        const exifMetadata = await getExifMetadata(buffer, initialMetadata.include)
 
-        const jpegImage = await convertHeicToJpeg(heicBuffer)
+        if (!exifMetadata?.width || !exifMetadata?.height || !exifMetadata?.orientation) {
+            return Response.json({ message: 'The necessary metadata information is missing: width, height or orientation' }, {status: 401})
+        }
+
+        const jpegImage = isHeic ? await convertHeicToJpeg(buffer) : buffer
 
         await saveJpegPhoto(jpegImage, additionTimestamp)
 
-        await saveMetadata(heicMetadata, initialMetadata, additionTimestamp)
+        await saveMetadata(exifMetadata, initialMetadata, additionTimestamp)
 
         return Response.json({message: 'The photo has been saved'}, {status: 201})
         
@@ -143,7 +149,7 @@ function getReqData(body: IPOSTBody) {
     }
 }
 
-interface IHeicMeta {
+interface IExifMeta {
     camera?: string
     longitude?: number
     latitude?: number
@@ -157,7 +163,7 @@ interface IHeicMeta {
     orientation?: orientation
 }
 
-async function getHeicMetadata(photo: Buffer, include: {createDate: boolean, coordinates: boolean, camera: boolean}): Promise<IHeicMeta> {
+async function getExifMetadata(photo: Buffer, include: {createDate: boolean, coordinates: boolean, camera: boolean}): Promise<IExifMeta> {
     try {
         const {
             Model: camera, 
@@ -196,18 +202,17 @@ async function getHeicMetadata(photo: Buffer, include: {createDate: boolean, coo
         return {}
     }
 }
-async function convertHeicToJpeg(heic: Buffer): Promise<ArrayBuffer> {
+async function convertHeicToJpeg(heic: Buffer): Promise<Buffer> {
     const jpeg = await convert({
         buffer: heic,
         format: 'JPEG',
         quality: 1
     })
-    return jpeg
+    return Buffer.from(jpeg)
 }
-async function saveJpegPhoto(jpeg: ArrayBuffer, id: string) {
-    const jpegBuffer = Buffer.from(jpeg)
+async function saveJpegPhoto(jpeg: Buffer, id: string) {
     
-    await fs.writeFile(`public/source/${id}.jpeg`, jpegBuffer)
+    await fs.writeFile(`public/source/${id}.jpeg`, jpeg)
 }
 
 interface IInitialMeta {
@@ -215,7 +220,7 @@ interface IInitialMeta {
     tags?: string
 }
 
-async function saveMetadata(heicMetadata: IHeicMeta, initialMetadata: IInitialMeta, id: string) {
+async function saveMetadata(heicMetadata: IExifMeta, initialMetadata: IInitialMeta, id: string) {
     try {
         const title = initialMetadata.title ? initialMetadata.title[0].toUpperCase() + initialMetadata.title.slice(1) : undefined
         const tags = initialMetadata.tags ? initialMetadata.tags.toLowerCase().split(' ') : undefined
