@@ -1,31 +1,17 @@
-.header > div {
-    height: 60px;
+.header {
+    width: 100%;
+    border-bottom: 1px solid #dfdfdf;
+    height: 100px;
+    user-select: none;
+}
+.header > nav {
+    height: 100%;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
-    width: 90%;
     margin: auto;
-}
-.plug {
-    width: 40px;
-}
-.header img {
-    font-size: 15px
 }
 .header nav {
     font-size: 18px;
-    color: #161616
-}
-.header nav a:first-of-type {
-    margin-right: 80px;
-}
-@media screen and (max-width: 1250px) {
-    .plug {
-        width: 0;
-    }
-}
-@media screen and (max-width: 600px) {
-    .header nav a:first-of-type {
-        margin-right: 40px;
-    }
 }
