@@ -18,8 +18,12 @@ export default function Photo({id, quality, title, priority}: PhotoParams) {
             key={id}
             href={`/photo/${id}`}
             shallow
-            style={{textAlign: 'center', width: '95%'}}
-            >
+            style={{
+                textAlign: 'center',
+                width: '95%',
+                display: hasErrorOccurred ? 'none' : 'inline',
+                cursor: 'zoom-in'
+            }}>
             <Image
                 src={`/source/${id}.jpeg`}
                 onError={() => setHasErrorOccurred(true)}
@@ -29,7 +33,6 @@ export default function Photo({id, quality, title, priority}: PhotoParams) {
                 style={{
                     width: '100%',
                     height: 'auto',
-                    display: hasErrorOccurred ? 'none' : 'inline'
                 }}
                 width={400}
                 height={300}
