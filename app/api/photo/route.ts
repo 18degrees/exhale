@@ -7,6 +7,8 @@ import { authConfig } from "@/app/configs/auth"
 import { IDBPhoto, IPhoto, orientation } from "@/app/interfaces/photo.interface"
 import nano from "nano"
 
+const exifremove = require('exifremove')
+
 const DB_URI = process.env.COUCHDB_URI!
 
 export async function GET(req: NextRequest) {
@@ -115,9 +117,10 @@ export async function POST(req: NextRequest) {
             return Response.json({ message: 'The necessary metadata information is missing: width, height or orientation' }, {status: 400})
         }
 
-        const jpegImage = isHeic ? await convertHeicToJpeg(buffer) : buffer
+        //convertHeicToJpeg deletes exif automatically; if image JPEG - remove it manually
+        const jpegImageWithoutExif = isHeic ? await convertHeicToJpeg(buffer) : exifremove.remove(buffer)
 
-        await saveJpegPhoto(jpegImage, additionTimestamp)
+        await saveJpegPhoto(jpegImageWithoutExif, additionTimestamp)
 
         await saveMetadata(exifMetadata, initialMetadata, additionTimestamp)
 
