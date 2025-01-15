@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
 
         const exifMetadata = await getExifMetadata(buffer, initialMetadata.include)
 
-        if (!exifMetadata?.width || !exifMetadata?.height || !exifMetadata?.orientation) {
+        if (!exifMetadata?.width || !exifMetadata?.height || typeof exifMetadata?.orientation !== 'number') {
             return Response.json({ message: 'The necessary metadata information is missing: width, height or orientation' }, {status: 400})
         }
 
@@ -186,8 +186,8 @@ async function getExifMetadata(photo: Buffer, include: {createDate: boolean, coo
             ],
             translateValues: false
         })
-        const height = orientation === 5 || orientation === 6 || orientation === 7 || orientation === 8 ? ExifImageWidth : ExifImageHeight
-        const width = orientation === 5 || orientation === 6 || orientation === 7 || orientation === 8 ? ExifImageHeight : ExifImageWidth
+        const height = orientation === 5 || orientation === 6 || orientation === 7 || orientation === 8 || orientation === 0 ? ExifImageWidth : ExifImageHeight
+        const width = orientation === 5 || orientation === 6 || orientation === 7 || orientation === 8 || orientation === 0 ? ExifImageHeight : ExifImageWidth
 
         return { 
             camera: include.camera ? camera : undefined, 

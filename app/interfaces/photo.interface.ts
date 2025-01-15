@@ -1,4 +1,6 @@
-export type orientation = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+//https://www.ameto.de/blog/exif-orientation-primer/
+export type orientation = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+//orientation can also be 0, which is similar to 5,6,7,8
 
 export interface IDBPhoto {
     title?: string
@@ -16,7 +18,6 @@ export interface IDBPhoto {
     longitude?: number
 
     orientation?: orientation
-    //https://www.ameto.de/blog/exif-orientation-primer/
 }
 export interface IPhoto {
     title?: string
