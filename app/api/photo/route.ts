@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
 
         const {base64URL, ...initialMetadata} = getReqData(body)
         
-        if (!base64URL) return Response.json({ message: 'The photo is missing' }, {status: 401})
+        if (!base64URL) return Response.json({ message: 'The photo is missing' }, {status: 400})
 
         const additionTimestamp = Date.now().toString()
 
