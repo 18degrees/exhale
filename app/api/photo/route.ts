@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
         const exifMetadata = await getExifMetadata(buffer, initialMetadata.include)
 
         if (!exifMetadata?.width || !exifMetadata?.height || !exifMetadata?.orientation) {
-            return Response.json({ message: 'The necessary metadata information is missing: width, height or orientation' }, {status: 401})
+            return Response.json({ message: 'The necessary metadata information is missing: width, height or orientation' }, {status: 400})
         }
 
         const jpegImage = isHeic ? await convertHeicToJpeg(buffer) : buffer
