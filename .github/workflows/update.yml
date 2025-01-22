@@ -2,9 +2,7 @@
 
 name: Update gallery
 
-on:
-  schedule:
-    - cron: '0 0 13,28 * *'
+on: workflow_dispatch
 
 jobs:
   deploy:

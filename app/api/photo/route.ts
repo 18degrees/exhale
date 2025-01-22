@@ -2,6 +2,7 @@ import { NextRequest } from "next/server"
 import exifr from 'exifr'
 import fs from 'fs/promises'
 import convert from 'heic-convert'
+import { Octokit } from "@octokit/core"
 import { getServerSession } from "next-auth"
 import { authConfig } from "@/app/configs/auth"
 import { IDBPhoto, IPhoto, orientation } from "@/app/interfaces/photo.interface"
@@ -123,6 +124,8 @@ export async function POST(req: NextRequest) {
         await saveJpegPhoto(jpegImageWithoutExif, additionTimestamp)
 
         await saveMetadata(exifMetadata, initialMetadata, additionTimestamp)
+
+        triggerUpdateAction()
 
         return Response.json({message: 'The photo has been saved'}, {status: 201})
         
@@ -251,5 +254,22 @@ async function saveMetadata(heicMetadata: IExifMeta, initialMetadata: IInitialMe
         console.log('Error occured during saving the image metadata. The photo saved without meta info\n', error)
 
         return {}
+    }
+}
+
+async function triggerUpdateAction() {
+    try {
+        const octokit = new Octokit({
+            auth: process.env.ACTION_ACCESS_TOKEN!
+        })
+          
+        await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+            owner: '18degrees',
+            repo: 'exhale',
+            workflow_id: 'update.yml',
+            ref: 'main',
+        })
+    } catch (error) {
+        console.log(error)
     }
 }
