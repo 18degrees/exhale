@@ -86,7 +86,7 @@ export default function AdminPage() {
                     id="photo"
                     name="photo"
                     type="file"
-                    accept="image/heic, image/jpeg"
+                    accept="image/jpeg"
                     required={true}
                     onChange={e => setFiles(e.currentTarget.files)}
                 />

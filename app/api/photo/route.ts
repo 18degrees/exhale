@@ -1,14 +1,13 @@
 import { NextRequest } from "next/server"
 import exifr from 'exifr'
 import fs from 'fs/promises'
-import convert from 'heic-convert'
 import { Octokit } from "@octokit/core"
 import { getServerSession } from "next-auth"
 import { authConfig } from "@/app/configs/auth"
 import { IDBPhoto, IPhoto, orientation } from "@/app/interfaces/photo.interface"
+import Piexif from 'piexifjs'
 import nano from "nano"
 
-const exifremove = require('exifremove')
 
 const DB_URI = process.env.COUCHDB_URI!
 
@@ -106,22 +105,25 @@ export async function POST(req: NextRequest) {
 
         const additionTimestamp = Date.now().toString()
 
-        const isHeic = base64URL.includes('application/octet-stream')
+        // const isHeic = base64URL.includes('application/octet-stream')
         
-        const base64 = base64URL.split('base64,')[1]
+        const roughBase64 = base64URL.split('base64,')[1]
 
-        const buffer = Buffer.from(base64, 'base64')
+        const roughJPEGBuffer = Buffer.from(roughBase64, 'base64')
 
-        const exifMetadata = await getExifMetadata(buffer, initialMetadata.include)
+        const exifMetadata = await getExifMetadata(roughJPEGBuffer, initialMetadata.include)
 
         if (!exifMetadata?.width || !exifMetadata?.height || typeof exifMetadata?.orientation !== 'number') {
             return Response.json({ message: 'The necessary metadata information is missing: width, height or orientation' }, {status: 400})
         }
 
-        //convertHeicToJpeg deletes exif automatically; if image JPEG - remove it manually
-        const jpegImageWithoutExif = isHeic ? await convertHeicToJpeg(buffer) : exifremove.remove(buffer)
+        const cleanBase64URL = getJpegWithoutSensitiveInfo(base64URL)
 
-        await saveJpegPhoto(jpegImageWithoutExif, additionTimestamp)
+        const cleanBase64 = cleanBase64URL.split('base64,')[1]
+
+        const cleanJPEGBuffer = Buffer.from(cleanBase64, 'base64')
+
+        await saveJpegPhoto(cleanJPEGBuffer, additionTimestamp)
 
         await saveMetadata(exifMetadata, initialMetadata, additionTimestamp)
 
@@ -208,13 +210,20 @@ async function getExifMetadata(photo: Buffer, include: {createDate: boolean, coo
         return {}
     }
 }
-async function convertHeicToJpeg(heic: Buffer): Promise<Buffer> {
-    const jpeg = await convert({
-        buffer: heic,
-        format: 'JPEG',
-        quality: 1
-    })
-    return Buffer.from(jpeg)
+function getJpegWithoutSensitiveInfo(base64URL: string) {
+    const exifData = Piexif.load(base64URL)
+
+    exifData.GPS = {}
+
+    if (exifData.Exif) exifData.Exif['36867'] = exifData.Exif['36868'] = ''
+
+    if (exifData['0th']) exifData['0th']['306'] = ''
+
+    const exifStr = Piexif.dump(exifData)
+
+    const jpegWithCutMetadata = Piexif.insert(exifStr, base64URL)
+
+    return jpegWithCutMetadata
 }
 async function saveJpegPhoto(jpeg: Buffer, id: string) {
     
