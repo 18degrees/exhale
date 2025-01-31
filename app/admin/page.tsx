@@ -2,12 +2,14 @@
 
 import { FormEvent, useState } from 'react'
 import style from './page.module.css'
-import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
-export default function AdminPage() {
-    const params = useSearchParams()
-    const id = params.get('id')
+export default function AdminPage({
+    searchParams,
+  }: {
+    searchParams: { [key: string]: string | string[] | undefined }
+  }) {
+    const { id } = searchParams
 
     const router = useRouter()
 
