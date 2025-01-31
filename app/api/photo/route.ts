@@ -7,6 +7,7 @@ import { authConfig } from "@/app/configs/auth"
 import { IDBPhoto, IPhoto, orientation } from "@/app/interfaces/photo.interface"
 import Piexif from 'piexifjs'
 import nano from "nano"
+import { MissingNecessaryInfoError } from "../errors"
 
 
 const DB_URI = process.env.COUCHDB_URI!
