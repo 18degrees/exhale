@@ -1,6 +1,7 @@
 'use client'
 
 import { IPhoto } from "@/app/interfaces/photo.interface"
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation'
 import style from './page.module.css'
@@ -15,10 +16,12 @@ interface PhotoParams {
 
 export default function Page({params}: PhotoParams) {
     const router = useRouter()
-    const [meta, setMeta] = useState<IPhoto>({})
+    const [meta, setMeta] = useState<IPhoto | undefined>()
     const [windowWidth, setWindowWidth] = useState<number | undefined>(undefined)
 
-    const aspectRatio = meta.width && meta.height ? meta.width / meta.height : undefined
+    const {data: session} = useSession()
+
+    const aspectRatio = meta?.width && meta.height ? meta.width / meta.height : undefined
 
     useEffect(() => {
         setWindowWidth(document.documentElement.clientWidth)
@@ -57,8 +60,8 @@ export default function Page({params}: PhotoParams) {
                 <div className={style['image-wrapper']}>
                     <Image
                         src={`/source/${params.id}.jpeg`}
-                        alt={meta.title ? meta.title : params.id}
-                        title={meta.title}
+                        alt={meta?.title ? meta.title : params.id}
+                        title={meta?.title}
                         quality={85}
                         width={aspectRatio ? 800 * aspectRatio : 500}
                         height={800}
@@ -71,11 +74,21 @@ export default function Page({params}: PhotoParams) {
                         priority
                     />
                 </div>
+                {session ? (
+                        <Link 
+                            href={`/admin/?id=${params.id}`}
+                            style={{
+                                display: 'block',
+                                textAlign: 'center'
+                            }}
+                            >изменить фото
+                        </Link>
+                        ) : null}
                 <div className={style.metadata}>
-                    {meta.title ? <h1>{meta.title}</h1> : null}
-                    {meta.tags ? <p className={style.tags}>{meta.tags.map(tag => <span key={tag}>{tag}</span>)}</p> : null}     
-                    {meta.createDateMask ? <p>Фото сделано {meta.createDateMask}</p> : null}
-                    {meta.googleMapLink ? <p>Смотреть локацию в <Link href={meta.googleMapLink} target="_blank">гугл картах</Link></p> : null}      
+                    {meta?.title ? <h1>{meta.title}</h1> : null}
+                    {meta?.tags ? <p className={style.tags}>{meta.tags.map(tag => <span key={tag}>{tag}</span>)}</p> : null}     
+                    {meta?.createDateMask ? <p>Фото сделано {meta.createDateMask}</p> : null}
+                    {meta?.googleMapLink ? <p>Смотреть локацию в <Link href={meta.googleMapLink} target="_blank">гугл картах</Link></p> : null}      
                     <p>
                         <Link 
                         href={`/source/${params.id}.jpeg`} 

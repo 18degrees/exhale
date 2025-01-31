@@ -148,6 +148,78 @@ export async function POST(req: NextRequest) {
         return Response.json({message: 'Server error. Try again later'}, {status: 500})
     }
 }
+
+export async function PATCH(req: NextRequest) {
+    try {
+        const session = await getServerSession(authConfig)
+
+        if (!session) {
+            return Response.json({ message: 'You must be logged in' }, {status: 401})
+        }
+
+        const id = req.nextUrl.searchParams.get('id')
+
+        if (!id) throw new MissingNecessaryInfoError('The photo id is missing')
+
+
+        const isThereSuchPhoto = await checkIsThereSuchPhoto(id)
+
+        if (!isThereSuchPhoto) {
+            return Response.json({message: 'There is no such photo'}, {status: 400}) 
+        }
+
+        const body: IPOSTBody = await req.json()
+
+        const {base64URL, ...initialMetadata} = getReqData(body)
+        
+        if (base64URL) {
+            // const isHeic = base64URL.includes('application/octet-stream')
+            
+            const roughBase64 = base64URL.split('base64,')[1]
+    
+            const roughJPEGBuffer = Buffer.from(roughBase64, 'base64')
+    
+            const exifMetadata = await getExifMetadata(roughJPEGBuffer, initialMetadata.include)
+    
+            const cleanBase64URL = getJpegWithoutSensitiveInfo(base64URL)
+    
+            const cleanBase64 = cleanBase64URL.split('base64,')[1]
+    
+            const cleanJPEGBuffer = Buffer.from(cleanBase64, 'base64')
+    
+            await saveJpegPhoto(cleanJPEGBuffer, id)
+    
+            await changeMetadata(exifMetadata, initialMetadata, id)
+        } else {
+            await changeMetadata(null, initialMetadata, id)
+        }
+
+        triggerUpdateAction()
+
+        return Response.json({message: 'The changes has been applied'}, {status: 201})
+        
+    } catch (error) {
+        console.log(error)
+
+        if (error instanceof MissingNecessaryInfoError) {
+            return Response.json({
+                message: error.message,
+            }, {status: 400})
+        }
+
+        return Response.json({message: 'Server error. Try again later'}, {status: 500})
+    }
+}
+
+async function checkIsThereSuchPhoto(id: string) {
+    try {
+        await fs.access(`public/source/${id}.jpeg`)
+
+        return true
+    } catch (error) {
+        return false
+    }
+}
 function getReqData(body: IPOSTBody) {
     const {title: titleRough, tags: tagsRough, base64URL: base64URLRough} = body
 
@@ -249,6 +321,11 @@ async function saveJpegPhoto(jpeg: Buffer, id: string) {
 interface IInitialMeta {
     title?: string
     tags?: string
+    include: {
+        createDate: boolean
+        coordinates: boolean
+        camera: boolean
+    }
 }
 
 async function saveMetadata(heicMetadata: IExifMeta, initialMetadata: IInitialMeta, id: string) {
@@ -276,12 +353,106 @@ async function saveMetadata(heicMetadata: IExifMeta, initialMetadata: IInitialMe
             ...heicMetadata
         })
     } catch (error) {
-        console.log('Error occured during saving the image metadata. The photo saved without meta info\n', error)
+        throw new Error('Error occured during saving the image metadata')
+    }
+}
+async function changeMetadata(newHeicMetadata: IExifMeta | null, initialMetadata: IInitialMeta, id: string) {
+    try {
+        const newTitle = initialMetadata.title ? initialMetadata.title[0].toUpperCase() + initialMetadata.title.slice(1) : undefined
+        const newTags = initialMetadata.tags ? initialMetadata.tags.toLowerCase().split(' ') : undefined
 
-        return {}
+        if (newTags) { 
+            for (let index = 0; index < newTags.length; index++) {
+                if (!newTags[index]) {
+                    newTags.splice(index, 1)
+                    index--
+                }
+            }
+        }
+        const nanoServer = nano(DB_URI)
+            
+        const photoDB: nano.DocumentScope<IDBPhoto> = nanoServer.db.use('exhale-photos')
+
+        const outdatedPhotoMeta = await photoDB.get(id)
+
+        let metaToSave = {...outdatedPhotoMeta}
+
+        if (newTitle) metaToSave.title = newTitle
+        if (newTags) metaToSave.tags = newTags
+
+        //значит, поступила новая фотография
+        if (newHeicMetadata) {
+            metaToSave = {
+                ...metaToSave,
+                ...newHeicMetadata
+            }
+        //иначе - могли измениться допустимые к сохранению данные
+        } else {
+            if (!initialMetadata.include.camera) metaToSave.camera = undefined
+            if (!initialMetadata.include.coordinates) metaToSave.latitude = metaToSave.longitude = undefined
+            if (!initialMetadata.include.createDate) metaToSave.createDate = metaToSave.offsetTime = undefined
+        }
+        
+        await photoDB.insert(metaToSave)
+    } catch (error) {
+        throw new Error('Error occured during saving the image metadata')
+    }
+}
+export async function DELETE(req: NextRequest) {
+    try {
+        const session = await getServerSession(authConfig)
+
+        if (!session) {
+            return Response.json({ message: 'You must be logged in' }, {status: 401})
+        }
+
+        const id = req.nextUrl.searchParams.get('id')
+        
+        if (!id) throw new MissingNecessaryInfoError('The photo id is missing')
+
+        const isThereSuchPhoto = await checkIsThereSuchPhoto(id)
+
+        if (!isThereSuchPhoto) {
+            return new Response(null, {status: 204}) 
+        }
+        
+        await deleteJpegPhoto(id)
+
+        await deleteMetadata(id)
+
+        triggerUpdateAction()
+
+        return Response.json({message: 'The photo has been deleted'}, {status: 200})
+        
+    } catch (error) {
+        console.log(error)
+
+        if (error instanceof MissingNecessaryInfoError) {
+            return Response.json({
+                message: error.message,
+            }, {status: 400})
+        }
+
+        return Response.json({message: 'Server error. Try again later'}, {status: 500})
     }
 }
 
+async function deleteJpegPhoto(id: string) {
+    await fs.rm(`public/source/${id}.jpeg`, {force: true})
+}
+async function deleteMetadata(id: string) {
+    try {
+        const nanoServer = nano(DB_URI)
+            
+        const photoDB: nano.DocumentScope<IDBPhoto> = nanoServer.db.use('exhale-photos')
+
+        const photoMeta = await photoDB.get(id)
+
+        photoDB.destroy(id, photoMeta._rev)
+    } catch (error) {
+        console.log('Error occured during deleting the image metadata. The photo deleted without meta info\n', error)
+    }
+}
 async function triggerUpdateAction() {
     try {
         const octokit = new Octokit({
