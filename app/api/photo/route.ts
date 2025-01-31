@@ -29,8 +29,10 @@ export async function GET(req: NextRequest) {
             const createDateMask = local?.date ? getDateString(local.date) : undefined
 
             const googleMapLink = latitude && longitude ? `https://www.google.com/maps/dir//${latitude},${longitude}/@${latitude},${longitude},13z` : undefined
+
+            const neededInfo: IPhoto = {createDateMask, googleMapLink, tags, title, width, height}
             
-            return Response.json({createDateMask, googleMapLink, tags, title, width, height})
+            return Response.json(neededInfo)
         } catch (error) {
         console.log(error)
         return Response.json({message: 'Server error. Try again later'}, {status: 500})

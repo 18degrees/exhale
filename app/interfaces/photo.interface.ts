@@ -17,7 +17,7 @@ export interface IDBPhoto {
     latitude?: number
     longitude?: number
 
-    orientation?: orientation
+    orientation: orientation
 }
 export interface IPhoto {
     title?: string
@@ -25,8 +25,8 @@ export interface IPhoto {
 
     createDateMask?: string
 
-    width?: number
-    height?: number
+    width: number
+    height: number
 
     camera?: string
 
