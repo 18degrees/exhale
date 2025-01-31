@@ -18,22 +18,22 @@ export async function GET(req: NextRequest) {
         
         if (!id) throw new MissingNecessaryInfoError('The photo id is missing')
             
-            const nanoServer = nano(DB_URI)
-            
-            const photoDB: nano.DocumentScope<IDBPhoto> = nanoServer.db.use('exhale-photos')
-            
-            const {createDate, offsetTime, latitude, longitude, tags, title, width, height} = await photoDB.get(id)
-            
-            const local = createDate && offsetTime ? getLocalTime(createDate, offsetTime) : undefined
+        const nanoServer = nano(DB_URI)
+        
+        const photoDB: nano.DocumentScope<IDBPhoto> = nanoServer.db.use('exhale-photos')
+        
+        const {createDate, offsetTime, latitude, longitude, tags, title, width, height} = await photoDB.get(id)
+        
+        const local = createDate && offsetTime ? getLocalTime(createDate, offsetTime) : undefined
 
-            const createDateMask = local?.date ? getDateString(local.date) : undefined
+        const createDateMask = local?.date ? getDateString(local.date) : undefined
 
-            const googleMapLink = latitude && longitude ? `https://www.google.com/maps/dir//${latitude},${longitude}/@${latitude},${longitude},13z` : undefined
+        const googleMapLink = latitude && longitude ? `https://www.google.com/maps/dir//${latitude},${longitude}/@${latitude},${longitude},13z` : undefined
 
-            const neededInfo: IPhoto = {createDateMask, googleMapLink, tags, title, width, height}
-            
-            return Response.json(neededInfo)
-        } catch (error) {
+        const neededInfo: IPhoto = {createDateMask, googleMapLink, tags, title, width, height}
+        
+        return Response.json(neededInfo)
+    } catch (error) {
         console.log(error)
 
         if (error instanceof MissingNecessaryInfoError) {
