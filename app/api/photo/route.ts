@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     try {
         const id = req.headers.get('id')
         
-        if (!id) return Response.json({message: 'The ID of the photo is missing'}, {status: 400})
+        if (!id) throw new MissingNecessaryInfoError('The photo id is missing')
             
             const nanoServer = nano(DB_URI)
             
@@ -35,6 +35,12 @@ export async function GET(req: NextRequest) {
             return Response.json(neededInfo)
         } catch (error) {
         console.log(error)
+
+        if (error instanceof MissingNecessaryInfoError) {
+            return Response.json({
+                message: error.message,
+            }, {status: 400})
+        }
         return Response.json({message: 'Server error. Try again later'}, {status: 500})
     }
 }
@@ -104,7 +110,7 @@ export async function POST(req: NextRequest) {
 
         const {base64URL, ...initialMetadata} = getReqData(body)
         
-        if (!base64URL) return Response.json({ message: 'The photo is missing' }, {status: 400})
+        if (!base64URL) throw new MissingNecessaryInfoError('The photo is missing')
 
         const additionTimestamp = Date.now().toString()
 
@@ -136,6 +142,13 @@ export async function POST(req: NextRequest) {
         
     } catch (error) {
         console.log(error)
+
+        if (error instanceof MissingNecessaryInfoError) {
+            return Response.json({
+                message: error.message,
+            }, {status: 400})
+        }
+
         return Response.json({message: 'Server error. Try again later'}, {status: 500})
     }
 }
