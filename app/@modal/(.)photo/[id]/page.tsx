@@ -10,11 +10,11 @@ import Image from "next/image"
 import Link from 'next/link'
 
 export default function Modal({params}: {params: {id: string}}) {
-	const [meta, setMeta] = useState<IPhoto>({})
+	const [meta, setMeta] = useState<IPhoto | undefined>()
 
     const [windowWidth, setWindowWidth] = useState<number | undefined>(undefined)
 
-    const aspectRatio = meta.width && meta.height ? meta.width / meta.height : undefined
+    const aspectRatio = meta?.width && meta.height ? meta.width / meta.height : undefined
 
     useEffect(() => {
         setWindowWidth(document.documentElement.clientWidth)
@@ -73,8 +73,8 @@ export default function Modal({params}: {params: {id: string}}) {
                     <div className={style['image-wrapper']}>
                         <Image
                             src={`/source/${params.id}.jpeg`}
-                            alt={meta.title ? meta.title : params.id}
-                            title={meta.title}
+                            alt={meta?.title ? meta.title : params.id}
+                            title={meta?.title}
                             quality={85}
                             width={aspectRatio ? 800 * aspectRatio : 500}
                             height={800}
@@ -88,10 +88,10 @@ export default function Modal({params}: {params: {id: string}}) {
                         />
                     </div>
                     <div className={style.metadata}>
-                        {meta.title ? <h1>{meta.title}</h1> : null}
-                        {meta.tags ? <p className={style.tags}>{meta.tags.map(tag => <span key={tag}>{tag}</span>)}</p> : null}     
-                        {meta.createDateMask ? <p>Фото сделано {meta.createDateMask}</p> : null}
-                        {meta.googleMapLink ? <p>Смотреть локацию в <Link href={meta.googleMapLink} target="_blank">гугл картах</Link></p> : null}      
+                        {meta?.title ? <h1>{meta.title}</h1> : null}
+                        {meta?.tags ? <p className={style.tags}>{meta.tags.map(tag => <span key={tag}>{tag}</span>)}</p> : null}     
+                        {meta?.createDateMask ? <p>Фото сделано {meta.createDateMask}</p> : null}
+                        {meta?.googleMapLink ? <p>Смотреть локацию в <Link href={meta.googleMapLink} target="_blank">гугл картах</Link></p> : null}      
                         <p>
                             <Link 
                             href={`/source/${params.id}.jpeg`} 
