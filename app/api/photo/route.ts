@@ -122,10 +122,6 @@ export async function POST(req: NextRequest) {
 
         const exifMetadata = await getExifMetadata(roughJPEGBuffer, initialMetadata.include)
 
-        if (!exifMetadata?.width || !exifMetadata?.height || typeof exifMetadata?.orientation !== 'number') {
-            return Response.json({ message: 'The necessary metadata information is missing: width, height or orientation' }, {status: 400})
-        }
-
         const cleanBase64URL = getJpegWithoutSensitiveInfo(base64URL)
 
         const cleanBase64 = cleanBase64URL.split('base64,')[1]
@@ -178,13 +174,13 @@ interface IExifMeta {
     longitude?: number
     latitude?: number
 
-    height?: number,
-    width?: number
+    height: number,
+    width: number
     
     createDate?: string
     offsetTime?: string
     
-    orientation?: orientation
+    orientation: orientation
 }
 
 async function getExifMetadata(photo: Buffer, include: {createDate: boolean, coordinates: boolean, camera: boolean}): Promise<IExifMeta> {
@@ -210,6 +206,12 @@ async function getExifMetadata(photo: Buffer, include: {createDate: boolean, coo
         const height = orientation === 5 || orientation === 6 || orientation === 7 || orientation === 8 || orientation === 0 ? ExifImageWidth : ExifImageHeight
         const width = orientation === 5 || orientation === 6 || orientation === 7 || orientation === 8 || orientation === 0 ? ExifImageHeight : ExifImageWidth
 
+        const possibleOrientations = new Set<orientation>([0, 1, 2, 3, 4, 5, 6, 7, 8])
+
+        if (!height || !width || !possibleOrientations.has(orientation)) {
+            throw new MissingNecessaryInfoError('The necessary exif information is missing: width, height or orientation')
+        }
+
         return { 
             camera: include.camera ? camera : undefined, 
             orientation, 
@@ -221,9 +223,7 @@ async function getExifMetadata(photo: Buffer, include: {createDate: boolean, coo
             width
         }
     } catch (error) {
-        console.log('Error occured during extracting the image metadata. The photo could be saved without meta info\n', error)
-
-        return {}
+        throw error
     }
 }
 function getJpegWithoutSensitiveInfo(base64URL: string) {
@@ -267,7 +267,7 @@ async function saveMetadata(heicMetadata: IExifMeta, initialMetadata: IInitialMe
     
         const nanoServer = nano(DB_URI)
             
-        const photoDB: nano.DocumentScope<IPhoto> = nanoServer.db.use('exhale-photos')
+        const photoDB: nano.DocumentScope<IDBPhoto> = nanoServer.db.use('exhale-photos')
     
         await photoDB.insert({
             _id: id,
