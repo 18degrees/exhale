@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
     })
 
-    const lastPhotoUploadDate = photoPages[0].lastModified
+    const lastPhotoUploadDate = photoPages[0] ? photoPages[0].lastModified : new Date()
     const staticRoutes: MetadataRoute.Sitemap = [
         {
             url: 'https://exhale.pics',
