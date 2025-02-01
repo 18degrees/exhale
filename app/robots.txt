@@ -4,3 +4,5 @@ Allow: /*
 
 Disallow: /admin
 Disallow: /api/
+
+Sitemap: https://exhale.pics/sitemap.xml
