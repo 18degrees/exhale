@@ -1,4 +1,4 @@
-import { IPhoto } from "@/app/interfaces/photo.interface";
+import { IDBPhoto } from "@/app/interfaces/photo.interface";
 import { NextRequest } from "next/server";
 import nano from "nano";
 
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     
         const nanoServer = nano(DB_URI)
         
-        const photoDB: nano.DocumentScope<IPhoto> = nanoServer.db.use('exhale-photos')
+        const photoDB: nano.DocumentScope<IDBPhoto> = nanoServer.db.use('exhale-photos')
     
         const photoDocs = await photoDB.list({
             descending: true, 
