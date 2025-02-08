@@ -86,7 +86,7 @@ export default function Page({params}: PhotoParams) {
                         ) : null}
                 <div className={style.metadata}>
                     {meta?.title ? <h1>{meta.title}</h1> : null}
-                    {meta?.tags ? <p className={style.tags}>{meta.tags.map(tag => <span key={tag}>{tag}</span>)}</p> : null}     
+                    {/* {meta?.tags ? <p className={style.tags}>{meta.tags.map(tag => <span key={tag}>{tag}</span>)}</p> : null} */}
                     {meta?.createDateMask ? <p>Фото сделано {meta.createDateMask}</p> : null}
                     {meta?.googleMapLink ? <p>Смотреть локацию в <Link href={meta.googleMapLink} target="_blank">гугл картах</Link></p> : null}      
                     <p>
