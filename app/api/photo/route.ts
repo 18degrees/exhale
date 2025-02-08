@@ -331,17 +331,16 @@ interface IInitialMeta {
 async function saveMetadata(heicMetadata: IExifMeta, initialMetadata: IInitialMeta, id: string) {
     try {
         const title = initialMetadata.title ? initialMetadata.title[0].toUpperCase() + initialMetadata.title.slice(1) : undefined
-        const tags = initialMetadata.tags ? initialMetadata.tags.toLowerCase().split(' ') : undefined
+        const tags = initialMetadata.tags ? initialMetadata.tags.toLowerCase().split(', ') : undefined
 
-        if (tags) { 
+        if (tags) {
             for (let index = 0; index < tags.length; index++) {
-                if (!tags[index]) {
-                    tags.splice(index, 1)
-                    index--
-                }
+                const lowerCaseTag = tags[index]
+                const upFirstLetterStr = lowerCaseTag[0].toUpperCase() + lowerCaseTag.slice(1)
+
+                tags[index] = upFirstLetterStr
             }
         }
-    
         const nanoServer = nano(DB_URI)
             
         const photoDB: nano.DocumentScope<IDBPhoto> = nanoServer.db.use('exhale-photos')
@@ -359,14 +358,14 @@ async function saveMetadata(heicMetadata: IExifMeta, initialMetadata: IInitialMe
 async function changeMetadata(newHeicMetadata: IExifMeta | null, initialMetadata: IInitialMeta, id: string) {
     try {
         const newTitle = initialMetadata.title ? initialMetadata.title[0].toUpperCase() + initialMetadata.title.slice(1) : undefined
-        const newTags = initialMetadata.tags ? initialMetadata.tags.toLowerCase().split(' ') : undefined
+        const newTags = initialMetadata.tags ? initialMetadata.tags.toLowerCase().split(', ') : undefined
 
-        if (newTags) { 
+        if (newTags) {
             for (let index = 0; index < newTags.length; index++) {
-                if (!newTags[index]) {
-                    newTags.splice(index, 1)
-                    index--
-                }
+                const lowerCaseTag = newTags[index]
+                const upFirstLetterStr = lowerCaseTag[0].toUpperCase() + lowerCaseTag.slice(1)
+
+                newTags[index] = upFirstLetterStr
             }
         }
         const nanoServer = nano(DB_URI)
