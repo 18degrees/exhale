@@ -19,9 +19,20 @@ export async function generateMetadata({ params }: PhotoParams): Promise<Metadat
     if (!res.ok || res.status === 204) return {}
 
     const metadata: IPhoto = await res.json()
+
+    const description = (
+        (metadata.createDateMask && metadata.tags && metadata.tags[0]) ? 
+            `Изображение с разрешением ${metadata.width}x${metadata.height}, сделанное ${metadata.createDateMask}, описывается следующими тегами: ${metadata.tags.join(', ')}`
+        : (metadata.tags && metadata.tags[0]) ? 
+            `Изображение с разрешением ${metadata.width}x${metadata.height} описывается следующими тегами: ${metadata.tags.join(', ')}` 
+        : (metadata.createDateMask) ? 
+            `Смотреть и скачать бесплатно изображение с разрешением ${metadata.width}x${metadata.height}, сделанное ${metadata.createDateMask}` 
+        : `Смотреть и скачать бесплатно изображение с разрешением ${metadata.width}x${metadata.height} в оригинальном качестве`
+    )
  
     return {
-        title: metadata.title,
+        title: `${metadata.title} — Фотография`,
+        description
     }
 }
 
